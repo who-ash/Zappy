@@ -116,6 +116,8 @@ export async function record(
     maxHeight: viewport.height * scale,
   });
 
+  // Dev servers can take a while to compile a page on its first visit.
+  page.setDefaultNavigationTimeout(120_000);
   await page.goto(spec.startUrl);
   await page.waitForLoadState("networkidle");
   if (authFile && new URL(page.url()).pathname.startsWith(loginPath))
@@ -127,6 +129,16 @@ export async function record(
 
   const steps: TimelineStep[] = [];
   for (const [index, step] of spec.steps.entries()) {
+    // On any failure, keep a screenshot and name the step.
+    const fail = async (e: Error): Promise<never> => {
+      await page
+        .screenshot({ path: join(outDir, "failed.png") })
+        .catch(() => {});
+      await browser.close();
+      throw new Error(
+        `Step ${index + 1} (${step.action}${step.narration ? `, "${step.narration}"` : ""}): ${e.message.split("\n")[0]}. See ${join(outDir, "failed.png")}`,
+      );
+    };
     let startMs = now();
     let box: Box | null = null;
     const target = step.selector ? locate(page, step.selector) : null;
@@ -138,9 +150,13 @@ export async function record(
       // not its fallback. Capped, as some lists keep loading.
       if (loadingSelector)
         await page
-          .waitForFunction((sel) => !document.querySelector(sel), loadingSelector, {
-            timeout: 15_000,
-          })
+          .waitForFunction(
+            (sel) => !document.querySelector(sel),
+            loadingSelector,
+            {
+              timeout: 15_000,
+            },
+          )
           .catch(() => {});
       await page.evaluate(
         () =>
@@ -148,14 +164,8 @@ export async function record(
             requestAnimationFrame(() => requestAnimationFrame(r)),
           ),
       );
-      // Also waits for it to be visible and still. On a miss, keep a screenshot.
-      await target.scrollIntoViewIfNeeded().catch(async (e: Error) => {
-        await page.screenshot({ path: join(outDir, "failed.png") });
-        await browser.close();
-        throw new Error(
-          `Step ${index + 1} ("${step.narration ?? step.action}"): ${e.message.split("\n")[0]}. See ${join(outDir, "failed.png")}`,
-        );
-      });
+      // Also waits for it to be visible and still.
+      await target.scrollIntoViewIfNeeded().catch(fail);
       // The step (voice, zoom, caption) starts once its target is on screen,
       // so a slow page shows as a pause, not narration over a blank screen.
       startMs = now();
@@ -179,39 +189,43 @@ export async function record(
         cursor.x,
         cursor.y,
       ] as const);
-    switch (step.action) {
-      case "goto":
-        await page.goto(String(step.value));
-        await page.waitForLoadState("networkidle");
-        break;
-      case "click":
-        await ripple();
-        await target!.click();
-        break;
-      case "fill":
-        await ripple();
-        await target!.click();
-        await target!.clear(); // prefilled fields are retyped, not appended to
-        await target!.pressSequentially(String(step.value), {
-          delay: typeDelayMs,
-        });
-        break;
-      case "select":
-        await ripple();
-        await target!.selectOption(String(step.value));
-        break;
-      case "hover":
-        await target!.hover();
-        break;
-      case "press":
-        await page.keyboard.press(String(step.value));
-        break;
-      case "scroll":
-        await page.mouse.wheel(0, Number(step.value ?? 600));
-        break;
-      case "wait":
-        await sleep(Number(step.value ?? 0));
-        break;
+    try {
+      switch (step.action) {
+        case "goto":
+          await page.goto(String(step.value));
+          await page.waitForLoadState("networkidle");
+          break;
+        case "click":
+          await ripple();
+          await target!.click();
+          break;
+        case "fill":
+          await ripple();
+          await target!.click();
+          await target!.clear(); // prefilled fields are retyped, not appended to
+          await target!.pressSequentially(String(step.value), {
+            delay: typeDelayMs,
+          });
+          break;
+        case "select":
+          await ripple();
+          await target!.selectOption(String(step.value));
+          break;
+        case "hover":
+          await target!.hover();
+          break;
+        case "press":
+          await page.keyboard.press(String(step.value));
+          break;
+        case "scroll":
+          await page.mouse.wheel(0, Number(step.value ?? 600));
+          break;
+        case "wait":
+          await sleep(Number(step.value ?? 0));
+          break;
+      }
+    } catch (e) {
+      await fail(e as Error);
     }
 
     // Pace to the voice: the step lasts its clip plus a breath.
