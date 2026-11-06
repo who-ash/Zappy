@@ -1,0 +1,19 @@
+# One video = one spec. Run: zappy make example
+title: A first look
+startUrl: /
+# auth: user          # a session saved with `zappy login user <url>`; omit to start signed out
+# before: npm run seed:demo   # optional shell command run first (reset demo data)
+steps:
+  - action: wait
+    value: 300
+    zoom: false
+    narration: This is the home page, where every visit starts.
+  - action: hover
+    selector: { role: link, name: Get started }
+    narration: Press Get started to begin.
+  # - action: click
+  #   selector: { role: button, name: Save }
+  #   narration: Save, and you're done.
+  # - action: wait
+  #   card: { eyebrow: Next up, title: Inviting your team, lines: [One link, Any role] }
+  #   narration: A title card shows over the page while this line plays.

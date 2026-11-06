@@ -1,0 +1,25 @@
+{
+  "name": "zappy-engine",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "zappy": "tsx src/cli.ts",
+    "check": "tsc --noEmit && tsx src/cuts.check.ts"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.540",
+    "@remotion/renderer": "4.0.540",
+    "playwright": "1.64.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "remotion": "4.0.540",
+    "tsx": "4.21.0",
+    "yaml": "2.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24",
+    "@types/react": "^19",
+    "typescript": "5.9.3"
+  }
+}

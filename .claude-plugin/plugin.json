@@ -1,0 +1,9 @@
+{
+  "name": "zappy",
+  "description": "Turn web-app flows into narrated demo videos: real browser, cursor, auto-zoom, AI voiceover, captions and title cards.",
+  "version": "0.1.0",
+  "author": { "name": "who-ash" },
+  "repository": "https://github.com/who-ash/Zappy",
+  "license": "MIT",
+  "keywords": ["video", "demo", "tutorial", "playwright", "remotion"]
+}

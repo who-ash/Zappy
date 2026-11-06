@@ -1,0 +1,6 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "tts": { "provider": "sarvam", "sarvam": { "speaker": "shubh" } },
+  "record": { "viewport": { "width": 1920, "height": 1080 }, "scale": 2 },
+  "render": { "width": 3840, "height": 2160, "fps": 30 }
+}

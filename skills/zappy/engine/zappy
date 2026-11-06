@@ -1,0 +1,4 @@
+#!/bin/sh
+# Run from your project root: <skill>/engine/zappy make <feature>
+DIR=$(cd "$(dirname "$0")" && pwd)
+exec "$DIR/node_modules/.bin/tsx" "$DIR/src/cli.ts" "$@"

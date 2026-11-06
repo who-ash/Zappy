@@ -1,0 +1,5 @@
+# Zappy: saved sign-in sessions, captured frames, renders and the TTS cache
+auth/
+out/
+.cache/
+.env

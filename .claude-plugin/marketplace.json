@@ -1,0 +1,11 @@
+{
+  "name": "zappy",
+  "owner": { "name": "who-ash" },
+  "plugins": [
+    {
+      "name": "zappy",
+      "source": "./",
+      "description": "Turn web-app flows into narrated demo videos."
+    }
+  ]
+}
