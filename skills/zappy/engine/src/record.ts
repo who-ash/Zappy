@@ -118,6 +118,7 @@ export async function record(
 
   // Dev servers can take a while to compile a page on its first visit.
   page.setDefaultNavigationTimeout(120_000);
+  page.setDefaultTimeout(180_000);
   await page.goto(spec.startUrl);
   await page.waitForLoadState("networkidle");
   if (authFile && new URL(page.url()).pathname.startsWith(loginPath))
