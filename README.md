@@ -13,8 +13,8 @@
 </p>
 
 <p align="center">
-  <a href="docs/promo.mp4"><img src="docs/promo.jpg" width="720" alt="A 16-second promo made with Zappy: an invoicing app on a dark background, with headlines and stickers. Click to watch."></a>
-  <br><sub>Made with Zappy: <code>zappy make lumen</code> (click to watch)</sub>
+  <a href="docs/promo.mp4"><img src="docs/promo.png" width="720" alt="A 19-second promo made with Zappy for Pathways, a hiring app: real app screens on angled frames, numbered steps and AI marks with quoted evidence. Click to watch."></a>
+  <br><sub>Made with Zappy: a numbered-explainer promo for Pathways (click to watch)</sub>
 </p>
 
 Zappy is an agent skill. Describe the flow you want filmed, and your coding agent writes a short YAML script for it. Zappy then plays the script against your running web app and renders a polished mp4:
