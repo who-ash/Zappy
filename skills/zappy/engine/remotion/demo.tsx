@@ -9,7 +9,8 @@ import {
   useVideoConfig,
 } from "remotion";
 import type { RenderConfig } from "../src/defaults";
-import { cutsOf, toOutput, toRecording } from "../src/cuts";
+import { cutsOf, outputLength, toOutput, toRecording } from "../src/cuts";
+import { musicVolume } from "../src/music";
 import type { Frame, Timeline, TimelineStep } from "../src/record";
 import type { Card } from "../src/spec";
 
@@ -18,7 +19,7 @@ const clamp = (v: number, lo: number, hi: number) =>
   Math.min(hi, Math.max(lo, v));
 
 /** Scale and focus point (output px) at recording time t. */
-function camera(
+export function camera(
   steps: TimelineStep[],
   t: number,
   k: number,
@@ -56,7 +57,7 @@ const C = { ink: "#ffffff", body: "rgba(255,255,255,.78)" };
 const FADE_MS = 350;
 
 /** Consecutive steps with the same card show it once: the run's start and end. */
-function cardRun(steps: TimelineStep[], t: number) {
+export function cardRun(steps: TimelineStep[], t: number) {
   const i = steps.findIndex((s) => t >= s.startMs && t < s.endMs);
   const card = steps[i]?.card;
   if (!card) return null;
@@ -69,7 +70,7 @@ function cardRun(steps: TimelineStep[], t: number) {
   return { card, start: steps[a].startMs, end: steps[b].endMs };
 }
 
-function TitleCard({
+export function TitleCard({
   card,
   ms,
   left,
@@ -175,7 +176,7 @@ function TitleCard({
 }
 
 /** The last captured frame at or before recording time t (frames are in time order). */
-function frameAt(frames: Frame[], t: number) {
+export function frameAt(frames: Frame[], t: number) {
   let lo = 0;
   let hi = frames.length - 1;
   while (lo < hi) {
@@ -186,9 +187,16 @@ function frameAt(frames: Frame[], t: number) {
   return frames[lo];
 }
 
-export type DemoProps = { timeline: Timeline; render: RenderConfig };
+/** music: a file in the output folder (copied there from render.music). */
+/** posterMs (promo): output time shown as frame 0, the thumbnail on every platform. */
+export type DemoProps = {
+  timeline: Timeline;
+  render: RenderConfig;
+  music?: string;
+  posterMs?: number;
+};
 
-export const Demo = ({ timeline, render }: DemoProps) => {
+export const Demo = ({ timeline, render, music }: DemoProps) => {
   const frame = useCurrentFrame();
   const { fps, width: W, height: H } = useVideoConfig();
   const k = W / timeline.viewport.width;
@@ -205,6 +213,11 @@ export const Demo = ({ timeline, render }: DemoProps) => {
     (s) => s.narration && t >= s.startMs && t < s.endMs,
   );
   const run = cardRun(timeline.steps, t);
+  const toMs = (recMs: number) => toOutput(timeline, cuts, recMs);
+  const spoken = timeline.steps
+    .filter((s) => s.audio)
+    .map((s) => ({ start: toMs(s.startMs), end: toMs(s.startMs) + s.audioMs }));
+  const totalMs = outputLength(timeline, cuts);
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#000" }}>
@@ -226,6 +239,16 @@ export const Demo = ({ timeline, render }: DemoProps) => {
               <Audio src={staticFile(s.audio)} />
             </Sequence>
           ),
+      )}
+      {music && (
+        <Audio
+          src={staticFile(music)}
+          loop
+          // Not the callback's frame: it restarts on every loop.
+          volume={() =>
+            musicVolume((frame / fps) * 1000, spoken, totalMs, render.musicVolume)
+          }
+        />
       )}
       {/* Cards and captions are laid out at 1920×1080 and scaled to the output size. */}
       <AbsoluteFill

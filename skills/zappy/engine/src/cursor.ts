@@ -1,8 +1,11 @@
 // Injected into every page: a visible cursor and a click ripple, driven by
 // the recorder through window.__demo. Kept as a string so it runs unbundled.
-/** `color`: the ripple, as #rrggbb. */
-export const cursorScript = (color: string) => {
+/** `color`: the ripple, as #rrggbb. `blur`: CSS selectors to blur (private data). */
+export const cursorScript = (color: string, blur: string[] = []) => {
   const [r, g, b] = [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16));
+  const blurCss = blur.length
+    ? `${blur.join(", ")} { filter: blur(14px) !important; }`
+    : "";
   return `(() => {
   if (window.__demo) return;
   const css = \`
@@ -14,7 +17,7 @@ export const cursorScript = (color: string) => {
       border: 3px solid rgba(${r},${g},${b},.9); background: rgba(${r},${g},${b},.25);
       animation: __demo-ripple 600ms ease-out forwards; }
     @keyframes __demo-ripple { to { transform: scale(4.5); opacity: 0; } }
-    nextjs-portal { display: none !important; } /* Next.js dev badge */\`;
+    nextjs-portal { display: none !important; } /* Next.js dev badge */\` + ${JSON.stringify(blurCss)};
   // Styles go in as early as possible (often before <head> exists), so the dev
   // badge stays hidden while a streamed page loads; mount() rechecks.
   const style = document.createElement("style");

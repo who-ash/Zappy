@@ -6,7 +6,7 @@ import { chromium, type Locator, type Page } from "playwright";
 import type { Config } from "./config";
 import { fakeCamera } from "./camera";
 import { cursorScript } from "./cursor";
-import type { Card, Spec, Step } from "./spec";
+import type { Card, Spec, Step, Sticker } from "./spec";
 import type { Clip } from "./voice";
 
 export type Box = { x: number; y: number; width: number; height: number };
@@ -21,11 +21,16 @@ export type TimelineStep = {
   audio: string | null; // null: a silent step
   audioMs: number;
   card: Card | null;
+  headline: string | null; // null: keep the previous headline
+  sticker: Sticker | null;
+  speed: number;
 };
 /** One captured screen: frames/<file>, shown from `ms` (recording time) until the next. */
 export type Frame = { file: string; ms: number };
 export type Timeline = {
   title: string;
+  style?: "tutorial" | "promo"; // absent in older timelines: tutorial
+  format?: "landscape" | "vertical" | "square";
   viewport: { width: number; height: number };
   frames: Frame[];
   offsetMs: number; // recording time when the start page was ready
@@ -52,7 +57,7 @@ function find(page: Page, s: NonNullable<Step["selector"]>): Locator {
   return page.locator(s.css);
 }
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, Math.max(0, ms)));
 
 export async function record(
   spec: Spec,
@@ -60,6 +65,8 @@ export async function record(
   outDir: string,
   authFile: string | undefined, // undefined: signed out
   cfg: Config,
+  // preview: run the steps without capturing (spec check); show: a visible browser.
+  { preview = false, show = false } = {},
 ): Promise<Timeline> {
   const {
     viewport,
@@ -74,10 +81,11 @@ export async function record(
     loginPath,
   } = cfg.record;
   const framesDir = join(outDir, "frames");
-  rmSync(framesDir, { recursive: true, force: true });
-  mkdirSync(framesDir, { recursive: true });
+  if (!preview) rmSync(framesDir, { recursive: true, force: true });
+  mkdirSync(preview ? outDir : framesDir, { recursive: true });
   // Selfie steps see a drawn avatar instead of a real camera.
   const browser = await chromium.launch({
+    headless: !show,
     args: [
       "--use-fake-device-for-media-stream",
       "--use-fake-ui-for-media-stream",
@@ -91,7 +99,9 @@ export async function record(
     deviceScaleFactor: scale,
     storageState: authFile,
   });
-  await context.addInitScript(cursorScript(rippleColor));
+  await context.addInitScript(
+    cursorScript(rippleColor, [...cfg.record.blur, ...(spec.blur ?? [])]),
+  );
   const page = await context.newPage();
   const t0 = Date.now(); // recording time 0
   const now = () => Date.now() - t0;
@@ -109,16 +119,18 @@ export async function record(
     });
     cdp.send("Page.screencastFrameAck", { sessionId }).catch(() => {});
   });
-  await cdp.send("Page.startScreencast", {
-    format: "jpeg",
-    quality: jpegQuality,
-    maxWidth: viewport.width * scale,
-    maxHeight: viewport.height * scale,
-  });
+  if (!preview)
+    await cdp.send("Page.startScreencast", {
+      format: "jpeg",
+      quality: jpegQuality,
+      maxWidth: viewport.width * scale,
+      maxHeight: viewport.height * scale,
+    });
 
   // Dev servers can take a while to compile a page on its first visit.
   page.setDefaultNavigationTimeout(120_000);
-  page.setDefaultTimeout(180_000);
+  // A preview fails fast on a missing control (the page is already compiled).
+  page.setDefaultTimeout(preview ? 30_000 : 180_000);
   await page.goto(spec.startUrl);
   await page.waitForLoadState("networkidle");
   if (authFile && new URL(page.url()).pathname.startsWith(loginPath))
@@ -244,6 +256,9 @@ export async function record(
       audio: clip?.file ? `voice/${index}.wav` : null,
       audioMs: clip?.file ? Math.round(clip.seconds * 1000) : 0,
       card: step.card ?? null,
+      headline: step.headline ?? null,
+      sticker: step.sticker ?? null,
+      speed: Number(step.speed ?? 1),
     });
   }
 
@@ -252,16 +267,19 @@ export async function record(
   await cdp.send("Page.stopScreencast").catch(() => {});
   await context.close();
   await browser.close();
-  if (!frames.length) throw new Error("No frames captured");
-
-  const timeline = {
+  const timeline: Timeline = {
     title: spec.title,
+    style: spec.style ?? "tutorial",
+    format: spec.format ?? "landscape",
     viewport,
     frames,
     offsetMs,
     endMs,
     steps,
   };
+  if (preview) return timeline;
+  if (!frames.length) throw new Error("No frames captured");
+
   writeFileSync(
     join(outDir, "timeline.json"),
     JSON.stringify(timeline, null, 2),

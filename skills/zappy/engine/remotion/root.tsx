@@ -1,7 +1,9 @@
 import { Composition } from "remotion";
 import { DEFAULTS } from "../src/defaults";
 import { cutsOf, outputLength } from "../src/cuts";
+import { frameSize, promoLength, promoSegments } from "../src/promo";
 import { Demo, type DemoProps } from "./demo";
+import { Promo } from "./promo";
 
 const empty: DemoProps = {
   timeline: {
@@ -16,6 +18,7 @@ const empty: DemoProps = {
 };
 
 export const Root = () => (
+  <>
   <Composition
     id="Demo"
     component={Demo}
@@ -42,4 +45,22 @@ export const Root = () => (
       ),
     })}
   />
+  <Composition
+    id="Promo"
+    component={Promo}
+    width={1920}
+    height={1080}
+    fps={30}
+    durationInFrames={1}
+    defaultProps={empty}
+    calculateMetadata={({ props }) => ({
+      ...frameSize(props.timeline, props.render),
+      fps: props.render.fps,
+      durationInFrames: Math.max(
+        1,
+        Math.ceil((promoLength(promoSegments(props.timeline.steps, props.render.bpm)) / 1000) * props.render.fps),
+      ),
+    })}
+  />
+  </>
 );

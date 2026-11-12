@@ -31,6 +31,8 @@ export const DEFAULTS = {
     loadingSelector: '[data-slot="skeleton"], [aria-busy="true"]',
     // A spec with `auth` that lands here means the saved session expired.
     loginPath: "/login",
+    // CSS selectors blurred in every video (private data shown app-wide).
+    blur: [] as string[],
   },
 
   render: {
@@ -46,6 +48,12 @@ export const DEFAULTS = {
     cardBg: "#10273f", // title cards
     cardAccent: "#1f9d55",
     font: "Inter, -apple-system, system-ui, sans-serif",
+    // Background music: a file path (relative to the zappy folder); "" = none.
+    // Loops, ducks under the voice and fades out at the end.
+    music: "",
+    musicVolume: 0.2,
+    // Promo cuts land on the beat of the music at this tempo; 0 = no snapping.
+    bpm: 0,
   },
 };
 

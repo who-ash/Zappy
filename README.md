@@ -9,6 +9,11 @@ Zappy is an agent skill. Describe the flow you want filmed, and your coding agen
 - **Voiceover** from OpenAI or Sarvam TTS, or captions only.
 - **Burned-in captions** and a matching `.srt` file.
 - **Title cards** for intros, tips and outros.
+- **Background music** that dips under the voice.
+- **Blur** for private data (emails, names, tokens) by CSS selector.
+- **Poster image** beside every video, for embeds.
+- **Promo mode** for short, music-led ads: kinetic headlines, stickers pinned to the UI, beat cuts, 16:9, 9:16 or 1:1.
+- **Preview** that runs a flow in seconds to catch broken steps before rendering.
 - **Signed-in flows** through a saved browser session.
 
 ## Install
@@ -52,6 +57,7 @@ You can also run it by hand from your project root:
 ENGINE=~/.claude/skills/zappy/engine
 $ENGINE/zappy init                                      # ./zappy workspace
 $ENGINE/zappy login admin http://localhost:3000/login   # only for signed-in flows
+$ENGINE/zappy preview <feature>                         # quick dry run, no render
 $ENGINE/zappy make <feature>                            # or: make --all
 $ENGINE/zappy still <feature> 5                         # PNG at 5 s, to check
 ```

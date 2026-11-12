@@ -1,6 +1,7 @@
 // zappy: turn a scripted app flow into a narrated demo video.
 //   zappy init                     create ./zappy (config, example spec)
 //   zappy login <name> <url>       sign in by hand once; saves auth/<name>.json
+//   zappy preview <feature> [--show]  run the steps fast, no voice or capture
 //   zappy make <feature> | --all   voice → record → subtitles → render
 //   zappy still <feature> <secs>   one frame of the rendered video, to check it
 // Options: --dir <path> (default ./zappy)
@@ -13,7 +14,7 @@ import {
   readFileSync,
   writeFileSync,
 } from "node:fs";
-import { join, resolve } from "node:path";
+import { extname, join, resolve } from "node:path";
 import { createInterface } from "node:readline/promises";
 import { parseArgs } from "node:util";
 import { bundle } from "@remotion/bundler";
@@ -25,7 +26,8 @@ import {
 import { chromium } from "playwright";
 import type { DemoProps } from "../remotion/demo";
 import { type Config, loadConfig } from "./config";
-import { cutsOf, toOutput } from "./cuts";
+import { cutsOf, outputLength, toOutput } from "./cuts";
+import { headlineMs, promoLength, promoSegments } from "./promo";
 import { record, type Timeline } from "./record";
 import { loadSpec } from "./spec";
 import { type Clip, VOICES, voice, withVoice } from "./voice";
@@ -39,6 +41,7 @@ const { values: opts, positionals } = parseArgs({
     dir: { type: "string", default: "zappy" },
     all: { type: "boolean" },
     voice: { type: "string" },
+    show: { type: "boolean" },
   },
 });
 const DIR = resolve(opts.dir!);
@@ -114,17 +117,51 @@ async function login(name: string, url: string) {
   console.log(`Saved ${file} (keep it out of git)`);
 }
 
-async function make(feature: string, cfg: Config) {
+/** The spec, its saved session, and the `before` command run. */
+function prepare(feature: string) {
   const vars = existsSync(paths.vars)
     ? JSON.parse(readFileSync(paths.vars, "utf8"))
     : {};
   const spec = loadSpec(paths.specs, feature, vars);
-  const out = join(paths.out, feature);
-  mkdirSync(join(out, "voice"), { recursive: true });
+  let authFile: string | undefined;
+  if (spec.auth) {
+    authFile = join(paths.auth, `${spec.auth}.json`);
+    if (!existsSync(authFile))
+      throw new Error(`No session "${spec.auth}": run zappy login ${spec.auth} <url>`);
+  }
+  if (spec.before) {
+    console.log(`▶ ${feature}: before: ${spec.before}`);
+    execSync(spec.before, { cwd: join(DIR, ".."), stdio: "inherit" });
+  }
+  return { spec, authFile, out: join(paths.out, feature) };
+}
 
-  console.log(`▶ ${feature}: voice (${cfg.tts.provider})`);
+/** Plays every step quickly (no voice, no capture) to catch broken selectors before a make. */
+async function preview(feature: string, cfg: Config) {
+  const { spec, authFile, out } = prepare(feature);
+  console.log(`▶ ${feature}: preview ${cfg.baseUrl}${spec.startUrl}`);
+  const fast = { ...cfg, record: { ...cfg.record, silentMs: 250 } };
+  const clips = spec.steps.map(() => null);
+  await record(spec, clips, out, authFile, fast, { preview: true, show: opts.show });
+  console.log(`✔ ${feature}: all ${spec.steps.length} steps ran`);
+}
+
+async function make(feature: string, cfg: Config) {
+  const { spec, authFile, out } = prepare(feature);
+  mkdirSync(join(out, "voice"), { recursive: true });
+  const promo = spec.style === "promo";
+
+  // A promo has no voice: a headline or card step holds long enough to read.
   const clips: (Clip | null)[] = [];
-  for (const [i, step] of spec.steps.entries()) {
+  if (promo)
+    for (const s of spec.steps) {
+      const text = [s.headline, s.card?.eyebrow, s.card?.title, ...(s.card?.lines ?? [])]
+        .filter(Boolean)
+        .join(" ");
+      clips.push(text ? { file: null, seconds: headlineMs(text) / 1000 } : null);
+    }
+  else console.log(`▶ ${feature}: voice (${cfg.tts.provider})`);
+  for (const [i, step] of promo ? [] : spec.steps.entries()) {
     const text = step.narration?.trim();
     const tts = withVoice(cfg.tts, step.voice ?? spec.voice);
     const clip = text ? await voice(text, tts, paths.tts) : null;
@@ -132,24 +169,31 @@ async function make(feature: string, cfg: Config) {
     clips.push(clip);
   }
 
-  if (spec.before) {
-    console.log(`▶ ${feature}: before: ${spec.before}`);
-    execSync(spec.before, { cwd: join(DIR, ".."), stdio: "inherit" });
-  }
-  let authFile: string | undefined;
-  if (spec.auth) {
-    authFile = join(paths.auth, `${spec.auth}.json`);
-    if (!existsSync(authFile))
-      throw new Error(`No session "${spec.auth}": run zappy login ${spec.auth} <url>`);
-  }
   console.log(`▶ ${feature}: recording ${cfg.baseUrl}${spec.startUrl}`);
   const timeline = await record(spec, clips, out, authFile, cfg);
-  writeFileSync(join(out, `${feature}.srt`), toSrt(timeline, cfg));
+  if (!promo) writeFileSync(join(out, `${feature}.srt`), toSrt(timeline, cfg));
 
-  console.log(`▶ ${feature}: rendering ${cfg.render.width}×${cfg.render.height}`);
+  console.log(`▶ ${feature}: rendering ${promo ? `promo (${spec.format ?? "landscape"})` : `${cfg.render.width}×${cfg.render.height}`}`);
+  let music: string | undefined;
+  if (cfg.render.music) {
+    const src = resolve(DIR, cfg.render.music);
+    if (!existsSync(src)) throw new Error(`render.music: no file ${src}`);
+    music = `music${extname(src)}`;
+    copyFileSync(src, join(out, music));
+  }
   const serveUrl = await serve(out);
-  const inputProps: DemoProps = { timeline, render: cfg.render };
-  const composition = await selectComposition({ serveUrl, id: "Demo", inputProps });
+  // Poster: the spec's `poster` time, else the middle of the video.
+  const lengthMs = promo
+    ? promoLength(promoSegments(timeline.steps, cfg.render.bpm))
+    : outputLength(timeline, cutsOf(timeline, cfg.render.maxPauseMs));
+  const posterSecs = spec.poster ?? lengthMs / 2000;
+  const inputProps: DemoProps = {
+    timeline,
+    render: cfg.render,
+    music,
+    posterMs: promo ? posterSecs * 1000 : undefined,
+  };
+  const composition = await selectComposition({ serveUrl, id: compId(timeline), inputProps });
   const mp4 = join(out, `${feature}.mp4`);
   await renderMedia({
     composition,
@@ -162,6 +206,27 @@ async function make(feature: string, cfg: Config) {
       process.stdout.write(`\r  ${Math.round(progress * 100)}%`),
   });
   console.log(`\n✔ ${mp4}`);
+  await frameAt(serveUrl, inputProps, posterSecs, join(out, `${feature}.png`), 1);
+}
+
+const compId = (tl: Timeline) => (tl.style === "promo" ? "Promo" : "Demo");
+
+/** Renders the video's frame at `secs` to a PNG, at most 1920 px wide × `maxScale`. */
+async function frameAt(
+  serveUrl: string,
+  inputProps: DemoProps,
+  secs: number,
+  file: string,
+  maxScale: number,
+) {
+  const composition = await selectComposition({ serveUrl, id: compId(inputProps.timeline), inputProps });
+  const frame = Math.min(
+    composition.durationInFrames - 1,
+    Math.round(secs * composition.fps),
+  );
+  const scale = Math.min(maxScale, 1920 / Math.max(composition.width, composition.height));
+  await renderStill({ composition, serveUrl, frame, output: file, inputProps, scale });
+  console.log(`✔ ${file}`);
 }
 
 async function still(feature: string, secs: string, cfg: Config) {
@@ -171,18 +236,15 @@ async function still(feature: string, secs: string, cfg: Config) {
   const timeline = JSON.parse(readFileSync(tlFile, "utf8")) as Timeline;
   const serveUrl = await serve(out);
   const inputProps: DemoProps = { timeline, render: cfg.render };
-  const composition = await selectComposition({ serveUrl, id: "Demo", inputProps });
-  const frame = Math.min(
-    composition.durationInFrames - 1,
-    Math.round(Number(secs) * composition.fps),
-  );
-  const file = join(out, `still-${secs}s.png`);
-  await renderStill({ composition, serveUrl, frame, output: file, inputProps, scale: 0.5 });
-  console.log(`✔ ${file}`);
+  await frameAt(serveUrl, inputProps, Number(secs), join(out, `still-${secs}s.png`), 0.5);
 }
 
 if (cmd === "init") init();
 else if (cmd === "login") await login(args[0], args[1]);
+else if (cmd === "preview") {
+  if (!args[0]) throw new Error("Usage: zappy preview <feature> [--show]");
+  await preview(args[0], loadConfig(DIR));
+}
 else if (cmd === "make") {
   const cfg = loadConfig(DIR);
   const features =
@@ -217,7 +279,7 @@ else if (cmd === "voices") {
 }
 else {
   console.log(
-    "Usage: zappy init | login <name> <url> | make <feature>|--all | still <feature> <secs> | voices | say <text> [--voice v]  [--dir zappy]",
+    "Usage: zappy init | login <name> <url> | preview <feature> [--show] | make <feature>|--all | still <feature> <secs> | voices | say <text> [--voice v]  [--dir zappy]",
   );
   process.exit(cmd ? 1 : 0);
 }

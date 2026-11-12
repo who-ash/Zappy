@@ -3,6 +3,7 @@ title: A first look
 startUrl: /
 # auth: user          # a session saved with `zappy login user <url>`; omit to start signed out
 # before: npm run seed:demo   # optional shell command run first (reset demo data)
+# blur: [".user-email"]       # CSS selectors blurred on screen (private data)
 steps:
   - action: wait
     value: 300
