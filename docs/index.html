@@ -155,22 +155,6 @@ nav { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-inde
 pre.code { width: 100%; padding: 22px 24px; overflow-x: auto; font: 13px/1.75 var(--mono); color: #c9c9cf; text-align: left; }
 .code .c { color: #5c5c62; } .code .k { color: #7aa7ff; } .code .s { color: #ffb48a; } .code .p { color: #c8a6ff; }
 
-/* ---------- free (pricing analogue) ---------- */
-.free { position: relative; padding: 140px 0 120px; text-align: center; overflow: hidden; }
-.free > .wrap { position: relative; z-index: 1; }
-.pricecard { width: min(360px, 100%); margin: 40px auto 0; padding: 18px; border-radius: 28px; text-align: left; background: rgba(18,18,20,.82); backdrop-filter: blur(20px); border: 1px solid var(--line-2); box-shadow: 0 30px 80px rgba(0,0,0,.6); }
-.pricecard .top { display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--ink); font-weight: 700; font-size: 15px; padding: 6px 0 16px; }
-.seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border-radius: 12px; background: #0a0a0b; font-size: 12.5px; font-weight: 600; text-align: center; }
-.seg span { padding: 7px 0; border-radius: 9px; color: var(--ink); }
-.seg span.on { background: #fff; color: #000; }
-.price { text-align: center; padding: 30px 0 20px; }
-.price b { color: #fff; font-size: 56px; letter-spacing: -.05em; }
-.price small { display: block; font-size: 13px; }
-.pricecard ul { list-style: none; padding: 4px 6px 18px; display: grid; gap: 10px; font-size: 14px; color: #d4d4d8; }
-.pricecard li { display: flex; gap: 10px; align-items: center; }
-.pricecard li::before { content: ""; width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid #4a4a50; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4.5 8.2 2.2 2.2 4.8-4.8' fill='none' stroke='%23aaa' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center/100% no-repeat; flex: none; }
-.pricecard .btn { width: 100%; justify-content: center; border-radius: 14px; padding: 13px; font-size: 15px; }
-
 /* ---------- faq ---------- */
 details { border-bottom: 1px solid var(--line); }
 summary { list-style: none; cursor: pointer; padding: 22px 4px; color: var(--ink); font-weight: 600; font-size: 17px; letter-spacing: -.02em; display: flex; justify-content: space-between; gap: 16px; }
@@ -360,29 +344,7 @@ footer { border-top: 1px solid var(--line); padding: 56px 0 40px; }
   </div>
 </section>
 
-<section class="free" id="install">
-  <div class="glow" aria-hidden="true">
-    <div class="haze o" style="width:420px;height:420px;left:8%;bottom:6%;opacity:.35"></div>
-    <div class="haze b" style="width:420px;height:420px;right:8%;bottom:10%;opacity:.35"></div>
-    <div class="ribbon o" style="width:760px;height:760px;left:calc(50% - 640px);top:52%;transform:rotate(-40deg)"></div>
-    <div class="ribbon b" style="width:760px;height:760px;right:calc(50% - 640px);top:48%;transform:rotate(40deg)"></div>
-    <div class="fade-b" style="height:25%"></div>
-  </div>
-  <div class="wrap">
-    <h2 class="big">One price.<br>Free forever.</h2>
-    <p class="lede">Open source, MIT licensed. The only cost is TTS on your own key, if you turn voice on.</p>
-    <div class="pricecard">
-      <div class="top"><span class="mark" style="width:26px;height:26px;border-radius:8px"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M14 2 4 14h6l-2 8 10-12h-6z" fill="url(#bolt)"/></svg></span>Zappy agent skill</div>
-      <div class="seg"><span class="on">Claude Code</span><span class="on">Cursor</span><span class="on">Codex</span></div>
-      <div class="price"><b>$0</b><small>No account. No watermark.</small></div>
-      <ul><li>Runs on your machine</li><li>Tutorials and promos</li><li>Up to 4K export</li><li>OpenAI or Sarvam voice, or none</li><li>Keys stay in your .env</li></ul>
-      <a class="btn" href="https://github.com/who-ash/Zappy#install">Get Zappy on GitHub</a>
-    </div>
-    <div class="cmd" style="margin-top:28px"><code>npx skills add https://github.com/who-ash/Zappy --skill zappy</code><button class="copy" data-copy="npx skills add https://github.com/who-ash/Zappy --skill zappy">Copy</button></div>
-  </div>
-</section>
-
-<section id="faq" style="padding-top:40px">
+<section id="faq">
   <div class="narrow">
     <h2 class="big center" style="margin-bottom:36px">Frequently asked<br>questions</h2>
     <details><summary>What do I need to run it?</summary><p>Node 22 or later and your web app running locally. The first run installs Playwright's Chromium, and the first render downloads Remotion's headless Chrome (about 140 MB).</p></details>
@@ -395,7 +357,7 @@ footer { border-top: 1px solid var(--line); padding: 56px 0 40px; }
   </div>
 </section>
 
-<section class="final">
+<section class="final" id="install">
   <div class="glow" aria-hidden="true">
     <div class="ribbon b" style="width:1000px;height:1000px;left:calc(50% - 980px);top:40%;transform:rotate(-25deg)"></div>
     <div class="ribbon o" style="width:1000px;height:1000px;right:calc(50% - 980px);top:40%;transform:rotate(25deg)"></div>
@@ -405,7 +367,8 @@ footer { border-top: 1px solid var(--line); padding: 56px 0 40px; }
   <div class="wrap">
     <div class="icon" style="width:72px;height:72px;border-radius:20px"><svg width="36" height="36" viewBox="0 0 24 24"><path d="M14 2 4 14h6l-2 8 10-12h-6z" fill="url(#bolt)"/></svg></div>
     <h2 class="big">Your next demo video<br>is one prompt away.</h2>
-    <a class="btn" href="#install" style="margin-top:32px">Install the skill</a>
+    <a class="btn" href="https://github.com/who-ash/Zappy#install" style="margin-top:32px">Get Zappy on GitHub</a>
+    <div><div class="cmd" style="margin-top:20px"><code>npx skills add https://github.com/who-ash/Zappy --skill zappy</code><button class="copy" data-copy="npx skills add https://github.com/who-ash/Zappy --skill zappy">Copy</button></div></div>
     <p style="margin-top:16px;font-size:13px">Free · Open source · Works with any coding agent</p>
   </div>
 </section>
