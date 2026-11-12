@@ -24,13 +24,27 @@ export type TimelineStep = {
   headline: string | null; // null: keep the previous headline
   sticker: Sticker | null;
   speed: number;
+  cut?: boolean; // promo: recorded, not shown
+  chips?: string[];
+  hook?: boolean;
+  layout?: "split" | "tilt" | "full";
+  pad?: number;
+  counter?: string;
 };
 /** One captured screen: frames/<file>, shown from `ms` (recording time) until the next. */
 export type Frame = { file: string; ms: number };
 export type Timeline = {
   title: string;
   style?: "tutorial" | "promo"; // absent in older timelines: tutorial
-  format?: "landscape" | "vertical" | "square";
+  format?: "landscape" | "vertical" | "square" | "feed";
+  bpm?: number; // promo: the tempo the cuts snap to (the spec's, else render.bpm)
+  theme?: { bg?: string; accent?: string; pop?: string }; // promo: the spec's colours
+  // promo: logo, logoDark and font are files in the output folder
+  brand?: { name: string; logo?: string; logoDark?: string; font?: string; fontFamily?: string; weights?: [number, number] };
+  safe?: "tiktok";
+  sfx?: boolean;
+  transition?: "push" | "cut" | "zoom";
+  note?: string;
   viewport: { width: number; height: number };
   frames: Frame[];
   offsetMs: number; // recording time when the start page was ready
@@ -131,8 +145,14 @@ export async function record(
   page.setDefaultNavigationTimeout(120_000);
   // A preview fails fast on a missing control (the page is already compiled).
   page.setDefaultTimeout(preview ? 30_000 : 180_000);
-  await page.goto(spec.startUrl);
-  await page.waitForLoadState("networkidle");
+  // A page whose `load` never fires (a slow image, a stream) shouldn't stall
+  // the recording: wait for the DOM, then give load and network a capped wait.
+  const settle = async () => {
+    await page.waitForLoadState("load", { timeout: 15_000 }).catch(() => {});
+    await page.waitForLoadState("networkidle", { timeout: 15_000 }).catch(() => {});
+  };
+  await page.goto(spec.startUrl, { waitUntil: "domcontentloaded" });
+  await settle();
   if (authFile && new URL(page.url()).pathname.startsWith(loginPath))
     throw new Error(
       "Landed on the login page: the saved session expired. Run `zappy login` again.",
@@ -158,7 +178,7 @@ export async function record(
     if (target) {
       // After a full navigation the DOM can be ready before anything is painted
       // (dev hydration); wait for load and two frames so the zoom sees it.
-      await page.waitForLoadState("load");
+      await page.waitForLoadState("load", { timeout: 10_000 }).catch(() => {});
       // Skeletons hold real controls (tabs, buttons); act on the loaded page,
       // not its fallback. Capped, as some lists keep loading.
       if (loadingSelector)
@@ -178,7 +198,11 @@ export async function record(
           ),
       );
       // Also waits for it to be visible and still.
-      await target.scrollIntoViewIfNeeded().catch(fail);
+      await target.scrollIntoViewIfNeeded({ timeout: 15_000 }).catch(async () => {
+        // Visible but never still (an animated overlay, a pulsing guide):
+        // scroll to it without waiting for it to settle.
+        await target.first().evaluate((el) => el.scrollIntoView({ block: "center" })).catch(fail);
+      });
       // The step (voice, zoom, caption) starts once its target is on screen,
       // so a slow page shows as a pause, not narration over a blank screen.
       startMs = now();
@@ -205,12 +229,12 @@ export async function record(
     try {
       switch (step.action) {
         case "goto":
-          await page.goto(String(step.value));
-          await page.waitForLoadState("networkidle");
+          await page.goto(String(step.value), { waitUntil: "domcontentloaded" });
+          await settle();
           break;
         case "click":
           await ripple();
-          await target!.click();
+          await target!.click({ timeout: 15_000 }).catch(() => target!.click({ force: true }));
           break;
         case "fill":
           await ripple();
@@ -259,6 +283,12 @@ export async function record(
       headline: step.headline ?? null,
       sticker: step.sticker ?? null,
       speed: Number(step.speed ?? 1),
+      cut: !!step.cut,
+      chips: step.chips,
+      hook: !!step.hook,
+      layout: step.layout,
+      pad: step.pad,
+      counter: step.counter,
     });
   }
 

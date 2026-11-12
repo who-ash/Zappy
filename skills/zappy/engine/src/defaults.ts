@@ -52,6 +52,10 @@ export const DEFAULTS = {
     // Loops, ducks under the voice and fades out at the end.
     music: "",
     musicVolume: 0.2,
+    // Promo: colour of *highlighted* words and marks; "" = cardAccent (one accent reads calmer).
+    pop: "",
+    // Every render's audio is normalised to this integrated loudness (LUFS); 0 = off.
+    loudness: -14,
     // Promo cuts land on the beat of the music at this tempo; 0 = no snapping.
     bpm: 0,
   },

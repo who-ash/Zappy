@@ -9,9 +9,15 @@ export type Seg = { i: number; recStart: number; recEnd: number; outStart: numbe
 export function promoSegments(steps: TimelineStep[], bpm: number): Seg[] {
   const beat = bpm > 0 ? 60_000 / bpm : 0;
   let out = 0;
-  return steps.map((s, i) => {
+  // The first hook step opens the video (the result first); the rest keep their order.
+  const h = steps.findIndex((s) => s.hook && !s.cut);
+  const order = steps.map((_, i) => i);
+  if (h > 0) order.unshift(...order.splice(h, 1));
+  return order.map((i) => {
+    const s = steps[i];
     let dur = (s.endMs - s.startMs) / (s.speed || 1);
     if (beat) dur = Math.max(1, Math.round(dur / beat)) * beat;
+    if (s.cut) dur = 0; // never on screen: promoAt skips empty segments
     const seg = { i, recStart: s.startMs, recEnd: s.endMs, outStart: out, outEnd: out + dur };
     out += dur;
     return seg;
@@ -25,6 +31,10 @@ export function promoAt(segs: Seg[], outMs: number) {
   return { seg, rec: seg.recStart + p * (seg.recEnd - seg.recStart) };
 }
 
+/** The promo's segments: the tempo saved with the timeline wins over the config's. */
+export const promoSegmentsOf = (tl: Timeline, render: RenderConfig) =>
+  promoSegments(tl.steps, tl.bpm ?? render.bpm);
+
 export const promoLength = (segs: Seg[]) => segs[segs.length - 1]?.outEnd ?? 0;
 
 /** Output size: landscape is render.width × height; the others keep its height's scale. */
@@ -33,9 +43,9 @@ export function frameSize(tl: Timeline, render: RenderConfig) {
   if (tl.style !== "promo" || !tl.format || tl.format === "landscape")
     return { width: render.width, height: render.height };
   const even = (n: number) => Math.round(n / 2) * 2;
-  return tl.format === "vertical"
-    ? { width: even(1080 * s), height: even(1920 * s) }
-    : { width: even(1080 * s), height: even(1080 * s) };
+  if (tl.format === "vertical") return { width: even(1080 * s), height: even(1920 * s) };
+  if (tl.format === "feed") return { width: even(1080 * s), height: even(1350 * s) }; // 4:5
+  return { width: even(1080 * s), height: even(1080 * s) };
 }
 
 /** A headline reads in about 0.3 s a word, plus time to land. */

@@ -1,7 +1,7 @@
 import { Composition } from "remotion";
 import { DEFAULTS } from "../src/defaults";
 import { cutsOf, outputLength } from "../src/cuts";
-import { frameSize, promoLength, promoSegments } from "../src/promo";
+import { frameSize, promoLength, promoSegmentsOf } from "../src/promo";
 import { Demo, type DemoProps } from "./demo";
 import { Promo } from "./promo";
 
@@ -58,7 +58,7 @@ export const Root = () => (
       fps: props.render.fps,
       durationInFrames: Math.max(
         1,
-        Math.ceil((promoLength(promoSegments(props.timeline.steps, props.render.bpm)) / 1000) * props.render.fps),
+        Math.ceil((promoLength(promoSegmentsOf(props.timeline, props.render)) / 1000) * props.render.fps),
       ),
     })}
   />

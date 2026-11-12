@@ -134,41 +134,108 @@ Plan the arc before the steps, and show the user the outline in a few lines:
 - Use fictional people and data (`example.com` emails). Never put secrets, real customer data or internal URLs on screen.
 - Silent steps (no narration) are for the mechanical clicks between narrated moments.
 
-## 5b. Promo videos (ads, launch clips, social)
+## 5b. Brand ads and promos (`style: promo`)
 
-For "a launch video", "an ad", "something for X/LinkedIn", use `style: promo`. Same steps and selectors, but no voice: the app plays in a floating window on a brand background, with big headlines above it, stickers on what's clicked, steps cut on the music's beat.
+For "an ad", "a launch video", "a brand video", "something for LinkedIn/Reels". Read [references/ad-playbook.md](references/ad-playbook.md) first. The order is the playbook's: **brief → script → spec → check → make → review**. The engine enforces it: `make` and `render` refuse a promo that breaks a playbook rule (list below), and `zappy check <feature>` shows what's wrong without rendering.
+
+1. **Brief.** Copy [templates/brief.md](templates/brief.md) to `zappy/briefs/<feature>.md` and fill every row, then the script table. Show it to the user and get an OK. Ask for anything you can't find, especially the CTA link. Never invent a link, a number or a claim.
+2. **Spec**, from the script. Same steps and selectors as a tutorial, no voice:
 
 ```yaml
-title: Invite your team
+title: Pathways, hire on real work
 style: promo
-format: vertical            # landscape (default) | vertical (9:16) | square
-startUrl: /settings/members
+viewport: { width: 1440, height: 900 }   # films smaller, so UI text reads larger in crops
+startUrl: /o/acme/results
+music: music/track.mp3          # licensed; credit it in share.txt
+bpm: 110                        # the track's tempo: cuts land on the beat
+brand:                          # the brand kit (required): logo bug + end card
+  name: Pathways
+  logo: ../public/logo.png        # for light backgrounds
+  logoDark: ../public/logo-white.png   # for dark ones (optional)
+  font: brand/Inter.woff2         # the brand font file (optional) and its family name
+  fontFamily: Inter
+  weights: [500, 700]             # two weights only: text, headings
+rights:                           # required: what's on screen and in the soundtrack
+  people: Fictional demo data     # or "Releases on file for everyone shown"
+  music: "Business Moves Vol. 10, Sascha Ende, ende.app, CC BY 4.0"
+  font: Inter, SIL Open Font License
+adCopy: { headline: Hire on real work, text: "Rank candidates on a real task.", button: Book now }
+campaign: Hiring-Launch           # names the files and the UTM links
+theme: { bg: "#061f1e", accent: "#0f6e6a", pop: "#3fb5ad" }  # one accent; light bg works too
+note: Demo data                 # shown on footage when names and scores are made up
+transition: push                # push | cut (hard, on the beat) | zoom
+format: landscape               # landscape | vertical (9:16) | square | feed (4:5)
+safe: tiktok                    # vertical only: keep clear of TikTok's right-side buttons
+sfx: true                       # Zappy's own clicks, whooshes and end sting (default on)
 steps:
   - action: wait
-    card: { eyebrow: Introducing, title: Team invites }
+    selector: { css: "table tbody tr:first-child td:nth-child(2)" }
+    hook: true                  # the result, played first: never open on a card. More hook
+                                # steps become Hook B and C variants in `zappy versions`
+    layout: split               # split | tilt (angled screen) | full (fills the frame)
+    pad: 4.7                    # room around the element in the crop (1.1 tight, 3+ wide)
+    headline: Your shortlist, ranked by *real work*.   # 3-7 words; *stars* highlight
   - action: click
-    selector: { role: button, name: Invite member }
-    headline: Bring your team in.                  # stays until the next headline ("" clears)
-    sticker: { kind: arrow, text: one click }      # arrow | circle | underline | badge | emoji
-  - action: fill
-    selector: { label: Email }
-    value: sam@example.com
-    speed: 2                                       # fast-forward this step
+    selector: { role: button, name: Start now }
+    cut: true                   # runs while recording, never shown
+  - action: hover
+    selector: { text: Signals }
+    layout: tilt
+    counter: "01"               # a step number above the headline (explainers, a clock)
+    headline: Set the checks *you* care about.
   - action: wait
-    card: { eyebrow: Try it, title: yourapp.com }
+    card: { stat: { value: "100/100", label: "named the stores *and* the fix." } }
+  - action: wait
+    card:
+      title: Hire on *real work*.
+      tiles:                    # up to three proofs, 5 words each; quote titles with commas
+        - { emoji: 🔗, title: One link per drive }
+      cta: { text: Book a demo, url: example.com/demo }
 ```
 
-- **Rules:** 15–25 s. The first 2 s are the hook (a card or the result, never a loading screen). Headlines of 3–6 words, in the app's own words, never generic SaaS lines ("streamline your workflow"). At most one sticker on screen at a time; a sticker needs a step with a selector. `narration` is not allowed in a promo.
-- **Music matters most here:** set `render.music`, and `render.bpm` to the track's tempo so cuts land on the beat (ask the user, or leave 0 for no snapping).
-- **Look:** `render.cardBg` is the background and `render.cardAccent` colours the stickers; set both to the brand's colours.
-- **Poster:** the poster frame is also baked in as frame 0, so the platform thumbnail is a good one. Pick it with `poster:` (seconds).
-- **Share copy:** after delivering, write `zappy/out/<feature>/share.txt` with a post of at most 280 characters (hook, what it does, link) for the user to post themselves. Never post anything.
+**Voice is optional.** A promo step with `narration:` is voiced (the project's TTS), plays at speed 1, gets a burned-in caption, and the music dips under it. Without narration the ad is music-led and must work muted.
+
+**Cards** go on any step (they hide its footage, so a setup step can carry one): a title (big type), `stat: { value, label }` (the number counts up), `compare: { left, right }` (before / after, 4 lines of 5 words a side), `quote: { text, by }` (7 words or fewer: cut a candidate's line down, never reword it into something they didn't say), `tiles:`, and `cta:` on the last card.
+
+**Pick a format to suit the message, not one template for every ad.** Each of these is a different ad, built from the same footage:
+
+| Format | Shape of it |
+|---|---|
+| Stat-led | hook footage → big `stat` cards between full-frame shots, `transition: cut` |
+| Before / after | hook → `compare` card → `tilt` proof → short `quote` → CTA |
+| Question → montage | footage hook (with the question as its headline) → fast `full` shots of 3+ words → the answer → CTA |
+| Numbered explainer | hook → `counter: "01"/"02"/"03"` on `tilt` or `split` steps, `transition: zoom` |
+| Clock / journey | `counter` timestamps through one task, `full` shots |
+| Manifesto | footage hook → short type lines between footage → CTA |
+| Bumper (6 s) | one hook shot → logo and CTA |
+
+**The rules `check` enforces** (errors stop the render):
+- A brief exists with every field filled.
+- `brand:` is set; footage appears in the first 5 s, so the brand shows early.
+- The first scene is footage, not a card.
+- Headlines and card text are 7 words or fewer; tiles and compare lines 5 or fewer; compare sides 4 lines.
+- Every scene stays up at least 1.5 s and 1 s per 3 words. Slow a step down with `speed` below 1, never speed footage past reading.
+- Exactly one CTA, on the last scene, with a `url`, on screen 2.5 s or more.
+- The brief is signed off (`Approved by:` filled) and its single message has no "and".
+- `rights.people` is set; `rights.music` when there's music; `rights.font` and `fontFamily` with a brand font.
+- The highlight colour has 3:1 contrast on the background.
+- Warnings: a headline or card line that isn't in the brief's script (the ad drifted from what was approved), headlines under 3 words, footage shots over 4 s, a weak contrast for text on the highlight colour.
+
+**What a rule can't check, you do:** every claim on screen is something the product really does (no "one click" for three clicks); `note: Demo data` whenever the people and scores are made up; licensed music, credited; nothing private or real on screen.
+
+- **Versions and delivery:** once the hero passes, run `"$ENGINE/zappy" versions <feature> --note "what changed"`. From the one recording it renders the playbook's set into `zappy/out/<feature>/delivery/vNN/`: the hero in both shapes, a 15 s cut (9:16 and 4:5) when the hero is longer, a 6 s bumper (16:9 and 9:16), and Hook B/C (9:16) from your extra `hook: true` steps. Each file is named `Brand_Campaign_<len>s_<shape>_Hook<A|B|C>_vNN.mp4`, with its poster `.png` and captions `.srt`. Alongside them: `copy.md` (headline, primary text, CTA button and a UTM landing link per file), `LICENCES.md`, `CHECKLIST.md` (the playbook's review, with what zappy checked ticked), and `preview.html` (every version at phone size). Each version is checked too, and the batch is logged in `zappy/versions.csv` for comparing results later.
+- **Loudness:** every render's audio is normalised to -14 LUFS (`render.loudness`).
+- **High-density vertical:** set `render.width/height` to 2560×1440 for 1440×2560 vertical exports.
+- **Poster:** set `poster:` (seconds) on a settled, strong frame. It's also baked in as frame 0.
+- **Review** with the playbook's checklist on stills of every scene, then write `zappy/out/<feature>/share.txt`: a post of at most 280 characters plus the music credit, for the user to post themselves. Never post anything.
 
 ## 6. Preview, make, check, fix
 
 ```bash
 "$ENGINE/zappy" preview <feature>     # runs every step fast: no voice, no capture, no render
 "$ENGINE/zappy" make <feature>        # or: make --all
+"$ENGINE/zappy" check <feature>       # promo: does it follow the ad playbook (also run by make and render)
+"$ENGINE/zappy" render <feature>      # re-render from the last recording: picks up spec changes to headlines, stickers, speed, zoom, cards, format, music
 "$ENGINE/zappy" still <feature> 4.5   # PNG of the video at 4.5 s → zappy/out/<feature>/still-4.5s.png
 ```
 
