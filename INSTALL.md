@@ -1,4 +1,4 @@
-# Zappy: quick install (VS Code / Cursor)
+# <img src="docs/logo.svg" width="28" height="28" alt=""> Zappy: quick install (VS Code / Cursor)
 
 1. **Have Node 22+** and your web app running locally (e.g. `npm run dev` → `http://localhost:3000`).
 2. **Add the skill** from your project root, then pick **Cursor** or **GitHub Copilot** (VS Code) when asked:

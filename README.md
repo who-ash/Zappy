@@ -1,6 +1,21 @@
-# Zappy
+<p align="center">
+  <img src="docs/logo.svg" width="96" height="96" alt="Zappy logo">
+</p>
 
-Turn app flows into demo videos.
+<h1 align="center">Zappy</h1>
+
+<p align="center">Turn app flows into demo videos.</p>
+
+<p align="center">
+  <a href="https://who-ash.github.io/Zappy/">Website</a> ·
+  <a href="INSTALL.md">Quick install</a> ·
+  <a href="skills/zappy/SKILL.md">Spec format</a>
+</p>
+
+<p align="center">
+  <a href="docs/promo.mp4"><img src="docs/promo.jpg" width="720" alt="A 16-second promo made with Zappy: an invoicing app on a dark background, with headlines and stickers. Click to watch."></a>
+  <br><sub>Made with Zappy: <code>zappy make lumen</code> (click to watch)</sub>
+</p>
 
 Zappy is an agent skill. Describe the flow you want filmed, and your coding agent writes a short YAML script for it. Zappy then plays the script against your running web app and renders a polished mp4:
 
