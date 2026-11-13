@@ -57,15 +57,9 @@ nav { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-inde
 .navpill a.l:hover { color: var(--ink); background: rgba(255,255,255,.06); }
 .navpill .gh { display: inline-flex; align-items: center; gap: 6px; background: #fff; color: #000; font-weight: 600; font-size: 14px; padding: 7px 12px; border-radius: 11px; margin-left: 4px; }
 
-/* ---------- buttons / chips ---------- */
+/* ---------- buttons ---------- */
 .btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 26px; border-radius: 16px; background: #fff; color: #000; font-weight: 600; font-size: 16px; box-shadow: 0 0 0 4px rgba(255,255,255,.06), 0 12px 40px rgba(255,255,255,.12); transition: transform .15s; }
 .btn:hover { transform: translateY(-1px); }
-.chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 8px 6px 14px; border-radius: 99px; background: rgba(255,255,255,.06); border: 1px solid var(--line); font-size: 13px; color: var(--body); }
-.chip b { color: var(--ink); font-weight: 600; }
-.eyebrow { display: inline-block; padding: 4px 12px; border-radius: 99px; background: var(--card-2); border: 1px solid var(--line); color: var(--ink); font-size: 12px; font-weight: 600; margin-bottom: 18px; }
-.tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; font-size: 12.5px; color: var(--dim); }
-.stars { color: var(--amber); letter-spacing: 2px; }
-.proof { display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--ink); font-size: 14px; font-weight: 600; }
 .cmd { display: inline-flex; align-items: center; gap: 12px; max-width: 100%; padding: 8px 8px 8px 16px; border-radius: 12px; background: rgba(255,255,255,.05); border: 1px solid var(--line); font: 13px var(--mono); }
 .cmd code { overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
 .copy { flex: none; border: 0; background: rgba(255,255,255,.08); color: var(--ink); border-radius: 8px; padding: 6px 10px; font: 600 12px var(--sans); cursor: pointer; }
@@ -77,10 +71,8 @@ nav { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-inde
 .icon { width: 88px; height: 88px; margin: 0 auto 30px; border-radius: 24px; display: grid; place-items: center; background: linear-gradient(160deg, #1d1d22, #050506); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16), -10px -6px 40px rgba(47,107,255,.55), 10px 8px 40px rgba(255,106,43,.55); }
 .hero .kicker { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 18px 0 16px; color: var(--ink); font-weight: 600; font-size: 15px; }
 .hero h1 { font-size: clamp(46px, 8vw, 92px); letter-spacing: -.055em; line-height: .96; }
-.hero .sub { max-width: 640px; margin: 22px auto 26px; font-size: clamp(18px, 2.2vw, 23px); line-height: 1.25; letter-spacing: -.02em; color: #7d7d84; font-weight: 600; }
-.hero .btn { margin: 22px 0 22px; }
-.hero .cmd { margin-top: 18px; }
-
+.hero .sub { max-width: 560px; margin: 22px auto 30px; font-size: clamp(18px, 2.2vw, 22px); line-height: 1.3; letter-spacing: -.02em; color: #7d7d84; font-weight: 600; }
+.hero .cta { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px; }
 /* the real video, in a window */
 .window { position: relative; z-index: 1; margin: 64px auto 0; width: min(1080px, 100%); border-radius: 18px; overflow: hidden; background: #0c0c0e; border: 1px solid var(--line-2); box-shadow: 0 0 0 6px rgba(255,255,255,.03), 0 40px 120px rgba(0,0,0,.9), -40px -30px 120px -60px rgba(47,107,255,.6), 40px -30px 120px -60px rgba(255,106,43,.6); }
 .bar { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--ink); font-weight: 600; }
@@ -88,18 +80,7 @@ nav { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-inde
 .bar .exp { margin-left: auto; background: var(--blue); color: #fff; padding: 4px 12px; border-radius: 8px; font-size: 12px; }
 .window video { width: 100%; aspect-ratio: 16 / 9; background: #0a0f1f; }
 
-/* ---------- problem ---------- */
 .big { font-size: clamp(34px, 5vw, 56px); letter-spacing: -.05em; }
-.lede { max-width: 560px; margin: 18px auto 0; font-size: 19px; line-height: 1.35; letter-spacing: -.015em; font-weight: 600; color: #7d7d84; }
-.taglist { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 760px; margin: 34px auto; }
-.taglist span { padding: 6px 12px; border-radius: 10px; background: var(--card-2); border: 1px solid var(--line); color: #c8c8cc; font-size: 13px; }
-.three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 56px; text-align: left; }
-.opt { padding: 26px; border-radius: 22px; background: var(--card); border: 1px solid var(--line); }
-.opt .ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--card-2); border: 1px solid var(--line); margin-bottom: 40px; color: var(--body); }
-.opt h4 { font-size: 19px; letter-spacing: -.03em; margin-bottom: 6px; }
-.opt p { font-size: 14.5px; }
-.opt.win-opt { background: radial-gradient(120% 120% at 100% 0%, rgba(255,106,43,.18), transparent 55%), radial-gradient(120% 120% at 0% 100%, rgba(47,107,255,.18), transparent 55%), var(--card); border-color: var(--line-2); }
-.opt.win-opt .ico { color: #fff; background: linear-gradient(160deg, #2f6bff, #ff6a2b); border: 0; }
 
 /* ---------- steps ---------- */
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 56px; text-align: left; }
@@ -116,44 +97,16 @@ nav { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-inde
 .yaml { width: 84%; font: 12px/1.75 var(--mono); color: #c9c9cf; }
 .yaml .k { color: #7aa7ff; } .yaml .s { color: #ffb48a; }
 .files { display: grid; gap: 8px; }
-
-/* ---------- feature blocks ---------- */
-.block-head { text-align: center; margin-bottom: 40px; }
-.block-head p { max-width: 520px; margin: 14px auto 0; font-size: 17px; line-height: 1.35; font-weight: 600; color: #7d7d84; letter-spacing: -.01em; }
-.feat { display: grid; grid-template-columns: 1fr 1.15fr; align-items: center; gap: 28px; padding: 28px; border-radius: 26px; background: var(--card); border: 1px solid var(--line); margin-bottom: 14px; overflow: hidden; }
-.feat.flip { grid-template-columns: 1.15fr 1fr; }
-.feat.flip .copy-col { order: 2; }
-.feat.wide { grid-template-columns: 1fr; }
-.feat h3 { font-size: 26px; letter-spacing: -.04em; line-height: 1.08; }
-.feat p { margin-top: 10px; font-size: 15.5px; line-height: 1.45; }
-.feat .copy-col { padding: 8px; }
-.stage { position: relative; min-height: 260px; border-radius: 18px; background: #070708; border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; }
-.pill { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 14px; background: #161618; border: 1px solid var(--line-2); color: var(--ink); font-size: 14px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+.pill { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 14px; background: #161618; border: 1px solid var(--line-2); color: var(--ink); font-size: 14px; font-weight: 600; }
 .pill small { display: block; color: var(--dim); font-weight: 500; font-size: 12px; }
-.pill.hi { border-color: rgba(255,106,43,.7); box-shadow: 0 0 24px rgba(255,106,43,.25), 0 10px 30px rgba(0,0,0,.5); }
-.wave { display: flex; align-items: center; gap: 4px; height: 70px; }
-.wave i { width: 5px; border-radius: 4px; background: linear-gradient(#7aa7ff, #2f6bff); animation: wv 1.1s ease-in-out infinite; }
-@keyframes wv { 50% { transform: scaleY(.35); } }
-.cap { position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); white-space: nowrap; padding: 8px 16px; border-radius: 10px; background: rgba(0,0,0,.8); color: #fff; font-size: 13.5px; border: 1px solid var(--line); }
-.shapes { display: flex; align-items: flex-end; gap: 16px; }
-.shape { border-radius: 10px; background: linear-gradient(160deg, #2a1a12, #0d1530); border: 1px solid rgba(255,255,255,.16); position: relative; }
-.shape::after { content: ""; position: absolute; left: 14%; right: 14%; bottom: 14%; height: 36%; background: #f2f2f2; border-radius: 4px; }
-.shape span { position: absolute; top: 12%; left: 0; right: 0; text-align: center; color: #fff; font: 700 11px var(--sans); }
-.blurry { display: grid; gap: 10px; color: var(--ink); font-size: 15px; }
-.blurry div { display: flex; gap: 12px; align-items: center; padding: 10px 14px; background: #121214; border: 1px solid var(--line); border-radius: 12px; }
-.blurry .x { filter: blur(5px); color: #ccc; }
-.music { display: flex; align-items: flex-end; gap: 4px; height: 90px; }
-.music i { width: 7px; border-radius: 3px; background: rgba(255,255,255,.22); }
-.music i.v { background: linear-gradient(#ffb48a, #ff6a2b); }
-.term { width: 90%; font: 12.5px/1.85 var(--mono); color: var(--body); text-align: left; }
-.term .ok { color: #7ee2a5; } .term .d { color: var(--dim); }
-.card-demo { width: 82%; padding: 30px; border-radius: 14px; background: #0a0f1f; text-align: left; color: #fff; }
-.card-demo small { font-size: 11px; letter-spacing: 3px; color: var(--orange); font-weight: 700; }
-.card-demo b { display: block; font-size: 26px; letter-spacing: -.03em; margin: 8px 0 12px; }
-.card-demo i { display: block; width: 40px; height: 4px; border-radius: 2px; background: var(--orange); margin-bottom: 12px; }
-.card-demo span { font-size: 14px; color: #c9cdd8; }
-pre.code { width: 100%; padding: 22px 24px; overflow-x: auto; font: 13px/1.75 var(--mono); color: #c9c9cf; text-align: left; }
-.code .c { color: #5c5c62; } .code .k { color: #7aa7ff; } .code .s { color: #ffb48a; } .code .p { color: #c8a6ff; }
+.pill.hi { border-color: rgba(255,106,43,.7); box-shadow: 0 0 24px rgba(255,106,43,.25); }
+
+/* ---------- features ---------- */
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 48px; text-align: left; }
+.opt { padding: 24px; border-radius: 22px; background: var(--card); border: 1px solid var(--line); }
+.opt .ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--card-2); border: 1px solid var(--line); margin-bottom: 20px; color: #7aa7ff; }
+.opt h4 { font-size: 18px; letter-spacing: -.03em; margin-bottom: 6px; }
+.opt p { font-size: 14.5px; }
 
 /* ---------- faq ---------- */
 details { border-bottom: 1px solid var(--line); }
@@ -169,22 +122,15 @@ details code { font: 13px var(--mono); color: #ffb48a; }
 .final > .wrap { position: relative; z-index: 1; }
 
 /* ---------- footer ---------- */
-footer { border-top: 1px solid var(--line); padding: 56px 0 40px; }
-.foot { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 32px; }
-.foot h4 { font-size: 13px; letter-spacing: 0; margin-bottom: 14px; color: var(--ink); }
-.foot ul { list-style: none; padding: 0; display: grid; gap: 9px; font-size: 14px; }
-.foot a:hover { color: var(--ink); }
-.foot .about p { font-size: 14px; margin: 12px 0 0; max-width: 280px; }
-.brand { display: flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 700; }
-.legal { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 13px; color: var(--dim); }
+footer { border-top: 1px solid var(--line); padding: 28px 0; font-size: 13px; color: var(--dim); }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+footer nav { position: static; transform: none; display: flex; gap: 18px; }
+footer a:hover { color: var(--ink); }
 
-/* ---------- responsive ---------- */
 @media (max-width: 860px) {
-  .three, .steps { grid-template-columns: 1fr; }
-  .feat, .feat.flip { grid-template-columns: 1fr; padding: 18px; }
-  .feat.flip .copy-col { order: 0; }
-  .foot { grid-template-columns: 1fr 1fr; }
-  .foot .about { grid-column: 1 / -1; }
+  .steps { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .opt { padding: 18px; }
   .navpill a.l, .bar .meta { display: none; }
   section { padding-top: 88px; }
 }
@@ -199,8 +145,8 @@ footer { border-top: 1px solid var(--line); padding: 56px 0 40px; }
   <div class="navpill">
     <a href="#" class="mark" aria-label="Zappy home"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M14 2 4 14h6l-2 8 10-12h-6z" fill="url(#bolt)"/></svg></a>
     <a href="#" class="name">Zappy</a>
-    <a class="l" href="#features">Features</a>
     <a class="l" href="#how">How it works</a>
+    <a class="l" href="#features">Features</a>
     <a class="l" href="#faq">FAQ</a>
     <a class="gh" href="https://github.com/who-ash/Zappy"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.1 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>GitHub</a>
   </div>
@@ -220,13 +166,10 @@ footer { border-top: 1px solid var(--line); padding: 56px 0 40px; }
   </div>
   <div class="wrap">
     <div class="icon"><svg width="46" height="46" viewBox="0 0 24 24"><path d="M14 2 4 14h6l-2 8 10-12h-6z" fill="url(#bolt)"/></svg></div>
-    <a class="chip" href="#features">New <b>promo mode</b>: beat-cut ads in 9:16 <span aria-hidden="true">→</span></a>
     <div class="kicker"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></svg>Agent skill for Claude Code, Cursor &amp; Codex</div>
     <h1>Demo videos, filmed<br>by your agent.</h1>
-    <p class="sub">Describe a flow. Zappy drives your real app, zooms on every click, then adds voice, captions and music. Narrated tutorials and short promos, no video editor.</p>
-    <div class="proof"><span class="stars">★★★★★</span>Free &amp; open source · MIT</div>
-    <a class="btn" href="#install"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>Install the skill</a>
-    <div class="tags"><span>Your real app</span><span>Auto-zoom</span><span>AI voiceover</span><span>Captions + .srt</span><span>Music</span><span>Promo mode</span><span>Blur</span><span>4K export</span><span>Local first</span></div>
+    <p class="sub">Describe a flow. Zappy films your real app and renders a narrated tutorial or a short promo. No editor.</p>
+    <div class="cta"><a class="btn" href="#install"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>Install the skill</a><span style="font-size:14px">Free &amp; open source · MIT</span></div>
   </div>
   <div class="wrap">
     <div class="window">
@@ -235,20 +178,6 @@ footer { border-top: 1px solid var(--line); padding: 56px 0 40px; }
     </div>
   </div>
 </header>
-
-<section id="why">
-  <div class="wrap center">
-    <h2 class="big">You built the product.<br>Now it needs a demo<br>that looks as good as it works.</h2>
-    <p class="lede">A polished demo video usually means learning an editor, or re-recording the whole thing every time the UI changes.</p>
-    <div class="taglist"><span>Real browser</span><span>Cursor &amp; ripples</span><span>Auto-zoom</span><span>Voiceover</span><span>Captions</span><span>.srt</span><span>Title cards</span><span>Headlines</span><span>Stickers</span><span>Beat cuts</span><span>Music ducking</span><span>Blur</span><span>Poster frame</span><span>16:9 · 9:16 · 1:1</span></div>
-    <a class="btn" href="#install">Install the skill</a>
-    <div class="three">
-      <div class="opt"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M6 21h12M9 9l-2 2 2 2M15 9l2 2-2 2"/></svg></div><h4>Learn a pro editor</h4><p>Keyframe every zoom, cursor and caption by hand. Then do it again next release.</p></div>
-      <div class="opt"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg></div><h4>Record it by hand</h4><p>Soft, compressed text, stray real emails on screen, and a mic full of retakes.</p></div>
-      <div class="opt win-opt"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M14 2 4 14h6l-2 8 10-12h-6z" fill="#fff"/></svg></div><h4>Or just ask your agent</h4><p>One prompt. It writes the spec, films your app and checks the result before you see it.</p></div>
-    </div>
-  </div>
-</section>
 
 <section id="how">
   <div class="wrap center">
@@ -263,7 +192,7 @@ footer { border-top: 1px solid var(--line); padding: 56px 0 40px; }
         <div class="txt"><div class="n">02</div><h4>It writes a spec</h4><p>Plain YAML steps, with selectors built from what users see.</p></div>
       </div>
       <div class="st">
-        <div class="vis"><div class="files"><div class="pill hi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff8a4d" stroke-width="2"><path d="m5 12 5 5L20 7"/></svg><div>lumen.mp4<small>1920×1080 · promo</small></div></div><div class="pill"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7aa7ff" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/></svg><div>lumen.png<small>poster frame</small></div></div></div></div>
+        <div class="vis"><div class="files"><div class="pill hi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff8a4d" stroke-width="2"><path d="m5 12 5 5L20 7"/></svg><div>pathways.mp4<small>1920×1080 · promo</small></div></div><div class="pill"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7aa7ff" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/></svg><div>pathways.png<small>poster frame</small></div></div></div></div>
         <div class="txt"><div class="n">03</div><h4>Film, render, check</h4><p>Zappy drives Chromium, renders with Remotion, and your agent checks the stills.</p></div>
       </div>
     </div>
@@ -271,75 +200,15 @@ footer { border-top: 1px solid var(--line); padding: 56px 0 40px; }
 </section>
 
 <section id="features">
-  <div class="wrap">
-    <div class="block-head"><span class="eyebrow">01 · Pro results</span><h2 class="big">Pro-level video,<br>no editing skills needed.</h2><p>Camera, cursor, voice and captions that look hand-edited, from a file your agent writes.</p></div>
-
-    <div class="feat">
-      <div class="copy-col"><h3>Auto-zoom that follows every click</h3><p>Zappy knows where each control is, so the camera glides in on it, the cursor moves there and a ripple marks the click. You never set a keyframe.</p></div>
-      <div class="stage"><div style="display:grid;gap:14px;justify-items:center">
-        <div class="pill"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7aa7ff" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><div>Zoom 2.2×<small>onto “New invoice”</small></div></div>
-        <div class="pill hi" style="margin-left:90px"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M4 2l16 11-7 1.5L9.5 22z"/></svg><div>Click · ripple<small>step 3 of 8</small></div></div>
-      </div></div>
-    </div>
-
-    <div class="feat flip">
-      <div class="copy-col"><h3>Narrated and captioned, in sync</h3><p>Each line is voiced by OpenAI or Sarvam, or left as captions only. Every step lasts as long as its line, and you get a matching .srt.</p></div>
-      <div class="stage"><div class="wave" aria-hidden="true"><i style="height:30%"></i><i style="height:70%;animation-delay:.1s"></i><i style="height:45%;animation-delay:.2s"></i><i style="height:90%;animation-delay:.3s"></i><i style="height:55%;animation-delay:.4s"></i><i style="height:80%;animation-delay:.5s"></i><i style="height:35%;animation-delay:.6s"></i><i style="height:65%;animation-delay:.7s"></i><i style="height:40%;animation-delay:.8s"></i><i style="height:75%;animation-delay:.9s"></i><i style="height:30%;animation-delay:1s"></i></div><div class="cap">Enter the client and the amount.</div></div>
-    </div>
-
-    <div class="feat">
-      <div class="copy-col"><h3>Title cards in your brand's colours</h3><p>Full-screen intros, tips and outros between the recorded moments.</p></div>
-      <div class="stage"><div class="card-demo"><small>WHY IT MATTERS</small><b>Paid in days, not weeks</b><i></i><span>✓ One click &nbsp; ✓ Any client</span></div></div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="block-head"><span class="eyebrow">02 · Speed</span><h2 class="big">A finished video in minutes,<br>not days.</h2><p>Preview the flow in seconds, render once, and re-render when the UI changes.</p></div>
-
-    <div class="feat wide">
-      <div class="stage" style="min-height:240px"><div class="term" aria-hidden="true">
-        <div><span class="d">$</span> zappy preview lumen</div>
-        <div class="ok">✔ lumen: all 8 steps ran</div>
-        <div><span class="d">$</span> zappy make lumen</div>
-        <div><span class="d">▶ lumen: recording · rendering 1920×1080 promo</span></div>
-        <div class="ok">✔ zappy/out/lumen/lumen.mp4 · lumen.png</div>
-      </div></div>
-      <div class="copy-col"><h3>Preview first, so the render is right the first time</h3><p><code style="font:13px var(--mono)">preview</code> runs every step in seconds and names any step that breaks. When the UI changes, run <code style="font:13px var(--mono)">make --all</code> and every video is current again.</p></div>
-    </div>
-
-    <div class="feat flip">
-      <div class="copy-col"><h3>Promo mode for launch day</h3><p>Kinetic headlines, stickers pinned to the UI and cuts on the beat, in landscape, vertical or square.</p></div>
-      <div class="stage"><div class="shapes" aria-hidden="true"><div class="shape" style="width:130px;height:74px"><span>16:9</span></div><div class="shape" style="width:58px;height:104px"><span>9:16</span></div><div class="shape" style="width:82px;height:82px"><span>1:1</span></div></div></div>
-    </div>
-
-    <div class="feat">
-      <div class="copy-col"><h3>A soundtrack that steps aside</h3><p>The background track loops, dips under every spoken line and fades out at the end.</p></div>
-      <div class="stage"><div class="music" aria-hidden="true"><i style="height:60%"></i><i style="height:75%"></i><i style="height:65%"></i><i class="v" style="height:25%"></i><i class="v" style="height:22%"></i><i class="v" style="height:26%"></i><i class="v" style="height:24%"></i><i style="height:70%"></i><i style="height:80%"></i><i style="height:62%"></i><i class="v" style="height:23%"></i><i class="v" style="height:25%"></i><i style="height:72%"></i><i style="height:66%"></i></div></div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="block-head"><span class="eyebrow">03 · Real context</span><h2 class="big">Your real app,<br>not a mockup.</h2><p>It drives the build you're running, with a saved session and seeded data.</p></div>
-
-    <div class="feat flip">
-      <div class="copy-col"><h3>Blur what shouldn't ship</h3><p>List CSS selectors once and those emails, names and tokens are blurred on every page, before a single frame is captured.</p></div>
-      <div class="stage"><div class="blurry" aria-hidden="true"><div>Signed in as <span class="x">maya@acme.co</span></div><div>API key <span class="x">sk-live-4f9a2c…</span></div></div></div>
-    </div>
-
-    <div class="feat">
-      <div class="copy-col"><h3>One short spec per flow</h3><p>Selectors come from what users see, so specs survive refactors. Your agent writes them; you can read them.</p></div>
-      <div class="stage"><pre class="code"><span class="k">title</span>: <span class="s">Send an invoice</span>
-<span class="k">style</span>: <span class="s">promo</span>
-<span class="k">steps</span>:
-  - <span class="k">action</span>: <span class="p">click</span>
-    <span class="k">selector</span>: { <span class="k">role</span>: <span class="s">button</span>, <span class="k">name</span>: <span class="s">New invoice</span> }
-    <span class="k">headline</span>: <span class="s">Bill a client in seconds.</span>
-    <span class="k">sticker</span>: { <span class="k">kind</span>: <span class="s">arrow</span>, <span class="k">text</span>: <span class="s">one click</span> }
-<span class="c"># blur: [".account-email"]</span></pre></div>
+  <div class="wrap center">
+    <h2 class="big">Looks hand-edited.<br>Isn't.</h2>
+    <div class="grid">
+      <div class="opt"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></div><h4>Auto-zoom</h4><p>The camera follows every click. No keyframes.</p></div>
+      <div class="opt"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v10M8 7v6M16 7v6M4 10v2M20 10v2M7 20h10"/></svg></div><h4>Voice and captions</h4><p>AI voiceover in sync, with a matching .srt.</p></div>
+      <div class="opt"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="10" height="7" rx="1"/><rect x="15" y="4" width="6" height="12" rx="1"/><rect x="6" y="16" width="6" height="5" rx="1"/></svg></div><h4>Promo mode</h4><p>Headlines, beat cuts, 16:9, 9:16 and 4:5.</p></div>
+      <div class="opt"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></div><h4>Brand-ad checks</h4><p>Brief, word counts, CTA and safe zones, checked.</p></div>
+      <div class="opt"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><h4>Music that ducks</h4><p>Dips under every line, fades out at the end.</p></div>
+      <div class="opt"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12s3-7 9-7 9 7 9 7-3 7-9 7-9-7-9-7z"/><path d="m4 4 16 16"/></svg></div><h4>Blur private data</h4><p>Emails and keys blurred before capture.</p></div>
     </div>
   </div>
 </section>
@@ -351,9 +220,6 @@ footer { border-top: 1px solid var(--line); padding: 56px 0 40px; }
     <details><summary>Does it record my production site?</summary><p>No. Point it at a local or staging dev server with demo data. A <code>before:</code> command can reset that data before each recording.</p></details>
     <details><summary>Which voices can I use?</summary><p>Sarvam (Bulbul v3) or OpenAI (gpt-4o-mini-tts), using your own API key. Set <code>tts.provider: none</code> for a captions-only video with no key at all. Clips are cached, so a re-render only pays for lines you changed.</p></details>
     <details><summary>What about flows behind a login?</summary><p>Run <code>zappy login admin &lt;url&gt;</code> once and sign in by hand. The session is saved locally (git-ignored), and specs use it with <code>auth: admin</code>.</p></details>
-    <details><summary>Can it make vertical videos for social?</summary><p>Yes. Set <code>style: promo</code> with <code>format: vertical</code> or <code>square</code> for a short, music-led clip with headlines and stickers.</p></details>
-    <details><summary>How do I keep private data out of the video?</summary><p>Use fictional demo data where you can. For anything else, list CSS selectors under <code>blur</code> and those elements are blurred on every page before capture.</p></details>
-    <details><summary>Is it free?</summary><p>Yes, MIT licensed. The only cost is TTS usage on your own key, if you turn voice on.</p></details>
   </div>
 </section>
 
@@ -369,25 +235,15 @@ footer { border-top: 1px solid var(--line); padding: 56px 0 40px; }
     <h2 class="big">Your next demo video<br>is one prompt away.</h2>
     <a class="btn" href="https://github.com/who-ash/Zappy#install" style="margin-top:32px">Get Zappy on GitHub</a>
     <div><div class="cmd" style="margin-top:20px"><code>npx skills add https://github.com/who-ash/Zappy --skill zappy</code><button class="copy" data-copy="npx skills add https://github.com/who-ash/Zappy --skill zappy">Copy</button></div></div>
-    <p style="margin-top:16px;font-size:13px">Free · Open source · Works with any coding agent</p>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <div class="foot">
-      <div class="about">
-        <a href="#" class="brand"><span class="mark"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M14 2 4 14h6l-2 8 10-12h-6z" fill="url(#bolt)"/></svg></span>Zappy</a>
-        <p>Turn app flows into demo videos. An open-source skill for coding agents.</p>
-      </div>
-      <div><h4>Product</h4><ul><li><a href="#features">Features</a></li><li><a href="#how">How it works</a></li><li><a href="#install">Install</a></li><li><a href="#faq">FAQ</a></li></ul></div>
-      <div><h4>Docs</h4><ul><li><a href="https://github.com/who-ash/Zappy#readme">README</a></li><li><a href="https://github.com/who-ash/Zappy/blob/main/skills/zappy/SKILL.md">Spec format</a></li><li><a href="https://github.com/who-ash/Zappy/blob/main/INSTALL.md">VS Code &amp; Cursor guide</a></li></ul></div>
-      <div><h4>Project</h4><ul><li><a href="https://github.com/who-ash/Zappy">GitHub</a></li><li><a href="https://github.com/who-ash/Zappy/issues">Issues</a></li><li><a href="https://github.com/who-ash/Zappy/blob/main/LICENSE">MIT License</a></li></ul></div>
-    </div>
-    <div class="legal"><span>© 2026 Zappy</span><span>Built with Playwright &amp; Remotion</span></div>
+    <span>© 2026 Zappy · MIT · Built with Playwright &amp; Remotion</span>
+    <nav aria-label="Footer"><a href="https://github.com/who-ash/Zappy#readme">Docs</a><a href="https://github.com/who-ash/Zappy/blob/main/INSTALL.md">Install guide</a><a href="https://github.com/who-ash/Zappy/issues">Issues</a><a href="https://github.com/who-ash/Zappy">GitHub</a></nav>
   </div>
 </footer>
-
 <script>
 document.querySelectorAll(".copy").forEach((b) =>
   b.addEventListener("click", async () => {
